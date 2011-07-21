@@ -1,0 +1,14 @@
+These are some links to interesting material
+
+http://www.ks.uiuc.edu/Research/gpu/files/upcrc_opencl_lec2.pdf
+
+http://www.ks.uiuc.edu/Research/gpu/files/openclintro.pdf
+
+http://developer.download.nvidia.com/compute/cuda/3_0/sdk/website/OpenCL/website/samples.html
+
+OpenCL Quick Reference Card
+http://www.khronos.org/files/opencl-quick-reference-card.pdf
+
+Paralell Reduction:
+http://developer.download.nvidia.com/compute/cuda/1_1/Website/projects/reduction/doc/reduction.pdf
+

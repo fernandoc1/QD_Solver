@@ -757,6 +757,8 @@ double f3(double r, int n1, int n2, int m1, int m2)
 
 double rmed(int n1, int n2, int m1, int m2)
 {
+	//static int counter=0;
+	//printf("%d rmed(%d , %d, %d, %d)\n", counter++, n1, n2, m1, m2);
 	int n = (n1 > n2) ? n1 + 8 : n2 + 8;
 	double s = 0.0;
 	double xr = (1.0 - 0.0);

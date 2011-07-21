@@ -10,6 +10,7 @@
 #include <iomanip>                  // Provides facilities to manipulate output formatting
 #include <complex>
 #include <string>
+#include <time.h>
 #include <omp.h>                    // opemmp for parallel computation
 #include <sys/stat.h>               // to use mkdir()
 #include <unistd.h>                 // getcwd(), chdir() definitions
@@ -18,13 +19,20 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
+
+void printExecutionTime(clock_t* start, clock_t* stop)
+{
+	printf("Execution time: %6.3fs.\n",((double)*stop-*start)/CLOCKS_PER_SEC);
+	return;
+}
+
 int main(int argc, char** argv)
 {
-	clock_t t_cpu_start = clock(); // to compute cpu_time
+	clock_t start=clock();
 	//nn=10; nl=115; ne=102; nh=nn*nl;              // Global variables
-	nn = 5;
-	nl = 5;
-	ne = 10;
+	nn = 10;
+	nl = 115;
+	ne = 102;
 	nh = nn * nl; // Global variables
 	/* Command Line Parameters
 	 if(argc!=4)
@@ -91,9 +99,12 @@ int main(int argc, char** argv)
 	// qw_solver(me,Ve,zs,En,Vec,-3.0);
 	// Oscilator_z_qw(me[5],L,En,Vec);
 
-	clock_t t_cpu_stop = clock(); // to compute cpu_time
+	clock_t stop=clock();
 	//double cpu_time = (t_cpu_stop-t_cpu_start)*1.0/CLOCKS_PER_SEC;
 	//cout << "CPU time = "<< cpu_time << " in seconds" << endl;
+
+	printExecutionTime(&start, &stop);
+
 	return 0;
 }
 //---------------------------------------------------------------------------
