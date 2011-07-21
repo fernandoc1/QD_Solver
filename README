@@ -1,0 +1,8 @@
+To compile and run this software you need tto install LAPACK development libraries.
+On Debian/Ubuntu, this can be done with the following command:
+
+sudo apt-get install liblapack-dev
+
+You should also need support to OpenMP libraries, but it should be integrated in
+your GCC distribution.
+
