@@ -10,38 +10,25 @@
 #include <iomanip>                  // Provides facilities to manipulate output formatting
 #include <complex>
 #include <string>
-#include <time.h>
 #include <omp.h>                    // opemmp for parallel computation
 #include <sys/stat.h>               // to use mkdir()
 #include <unistd.h>                 // getcwd(), chdir() definitions
 #include "qd_solver.h"              // Simple Vector, Matrix class e functions for QD solver
 #include <cstdlib>
+
+#include "Utils/TimeMeter.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-
-void printExecutionTime(clock_t* start, clock_t* stop)
-{
-	printf("Execution time: %6.3fs.\n",((double)*stop-*start)/CLOCKS_PER_SEC);
-	return;
-}
 
 int main(int argc, char** argv)
 {
-	clock_t start=clock();
-	//nn=10; nl=115; ne=102; nh=nn*nl;              // Global variables
-	nn = 10;
-	nl = 115;
-	ne = 102;
-	nh = nn * nl; // Global variables
-	/* Command Line Parameters
-	 if(argc!=4)
-	 {
-	 printf("nn, nl, ne\n");
-	 return 1;
-	 }
-	 nn=atoi(argv[1]); nl=atoi(argv[2]); ne=atoi(argv[3]); nh=nn*nl;              // Global variables
-	 */
+
+	TimeMeter meter;
+	meter.start();
+
+	nn=10; nl=115; ne=102; nh=nn*nl;              // Global variables
+
 	string dir_name = "dat";
 	mkdir(dir_name.c_str(), 0755);
 	chdir(dir_name.c_str());
@@ -74,16 +61,16 @@ int main(int argc, char** argv)
 	Matrix<double> Vec0(nh, ne), Vec1(nh, ne);
 	Vector<double> En0(nh), En1(nh);
 
-	//omp_set_nested(1);  // set to parallelize nested pragma omp commands
-	//#pragma omp parallel sections // starts a new team
+	omp_set_nested(1);  // set to parallelize nested pragma omp commands
+	#pragma omp parallel sections // starts a new team
 	{
-		//#pragma omp section         // solve the 2 angular momentum simultaneously.
+		#pragma omp section         // solve the 2 angular momentum simultaneously.
 		{
 			qd_solver(m_ang0, me, Ve, zs, rs, En0, Vec0, -2.6);
 			wave_funciton(m_ang0, zs, rs, Vec0);
 			Oscilator_z(m_ang0, me[5], L, En0, Vec0);
 		}
-		//#pragma omp section
+		#pragma omp section
 		{
 			qd_solver(m_ang1, me, Ve, zs, rs, En1, Vec1, -2.6);
 			wave_funciton(m_ang1, zs, rs, Vec1);
@@ -93,17 +80,8 @@ int main(int argc, char** argv)
 
 	Oscilator_r(me[5], rs[0], m_ang0, m_ang1, En0, En1, Vec0, Vec1);
 
-	// nl=1000; // Quantum Well solver
-	// Matrix<double> Vec(nl,ne);
-	// Vector<double> En(nl);
-	// qw_solver(me,Ve,zs,En,Vec,-3.0);
-	// Oscilator_z_qw(me[5],L,En,Vec);
-
-	clock_t stop=clock();
-	//double cpu_time = (t_cpu_stop-t_cpu_start)*1.0/CLOCKS_PER_SEC;
-	//cout << "CPU time = "<< cpu_time << " in seconds" << endl;
-
-	printExecutionTime(&start, &stop);
+	meter.stop();
+	meter.printTime();
 
 	return 0;
 }
